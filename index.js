@@ -1,27 +1,22 @@
-const fs = require('fs')
+const fs = require("fs");
+const http = require("http");
+const url = require("url");
 
-//Blocking, synchronous way
-//const textIn = fs.readFileSync("./txt/input.txt", "utf-8");
-//let date = new Date().toJSON();
-//const textOut = "This is what we know abou the avocado: " + textIn + " Created on " + date;
-//fs.writeFileSync("./txt/output.txt", textOut);
-//console.log("File written!")
+const server = http.createServer((req, res) => {
+  let pathName = req.url;
+  if (pathName === "/overview" || pathName === "/") {
+    res.end("this is the overview");
+  } else if (pathName === "/product") {
+    res.end("This is the product");
+  } else {
+    res.writeHead(404, {
+      "Content-type": "text/html",
+      "my-own-header": "hello-world",
+    });
+    res.end("<h1>Path not found!</h1>");
+  }
+});
 
-//Non- blocking, asynchrous way
-
-
-fs.readFile("./txt/star.txt", 'utf-8', (err, data1) => {
-    if (err) return console.log("Error")
-    fs.readFile(`./txt/${data1}.txt`, 'utf-8', (err, data2) => {
-        console.log(data2);
-        fs.readFile(`./txt/append.txt`, 'utf-8', (err, data3) => {
-            console.log(data3); 
-            fs.writeFile(`./txt/final.txt`, `${data2} ${data3}`, 'utf-8', err => {
-            console.log("Your file has been written")
-        })
-        })
-})
-
-})
-
-console.log("Will read file!")
+server.listen(3000, () => {
+  console.log("server started");
+});
